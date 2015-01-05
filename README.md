@@ -6,4 +6,4 @@ Source page:
 http://www.studentenwerk-potsdam.de/mensa-brandenburg.html
 
 Webservice:
-https://mobile-quality-research.org/services/meals/v2/
+https://mobile-quality-research.org/services/meals/
