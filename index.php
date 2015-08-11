@@ -152,7 +152,7 @@
 				
 				// fill the meals with other informations
 				if (strlen($cleanString) > 0) {
-					$mealsArray[$k - 1] = ['mealNumber' => $k, 'name' => $cleanString, 'symbols' => $symbols, 'additives' => $additives, 'allergens' => $allergens];
+					$mealsArray[] = ['mealNumber' => $k, 'name' => $cleanString, 'symbols' => $symbols, 'additives' => $additives, 'allergens' => $allergens];
 				}
 				
 				// unset for the next run
