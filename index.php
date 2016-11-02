@@ -6,7 +6,13 @@
 	date_default_timezone_set("Europe/Berlin");
 	setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge');
 	header('Content-Type: application/json;charset=utf-8');
-	
+	header('Access-Control-Allow-Origin: *');
+	header("Expires: 0");
+	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+	header("Cache-Control: no-store, no-cache, must-revalidate");
+	header("Cache-Control: post-check=0, pre-check=0", false);
+	header("Pragma: no-cache");
+
 	// date from 'Do, 18. Juni 2015' to '2015-06-08'
 	function formatDate($weirdDate) {
 		$date = date_parse_from_format('D, d. M Y', $weirdDate);
@@ -57,7 +63,7 @@
 	$knownAllergens = array("(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)", "(K)", "(L)", "(M)", "(N)");
 		
 	if (file_exists($filename) && !isset($_GET['force_update'])) {
-		$resultArray = unserialize( file_get_contents($filename) );
+		$result = json_decode( file_get_contents($filename) );
 	} else {
 		$dates = array();
 		$meals = array();
@@ -275,11 +281,7 @@
 			
 			// Add this days' meals to resultArray set
 			$resultArray[] = ['date' => $date, 'meals' => $mealsArray];
-			
-			// persist for the next time to save traffic
-			if ($UP_TO_DATE) {
-				file_put_contents($filename, serialize($resultArray));
-			}
+
 			
 			// it's because of the html on the side
 			if (($dayOfWeek >= 5 && $actualDay == 5 && $runs == 0) |
@@ -298,10 +300,12 @@
 			}	
 		}
 		curl_close($ch);
+        
+        // put the array in a list
+	    $result = ['days' => $resultArray];
+        
+        // persist for the next time to save traffic
+        file_put_contents($filename, json_encode($result));
 	}
-	
-	// put the array in a list
-	$result = ['days' => $resultArray];
-	
+
 	echo json_encode($result);
-?> 
